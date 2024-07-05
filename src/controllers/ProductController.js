@@ -1,6 +1,6 @@
 const Database = require('../database/Database');
 
-class ProductsController extends Database{
+class ProductController extends Database{
     
         async cadastrar (request, response){
             try{
@@ -29,6 +29,23 @@ class ProductsController extends Database{
                 response.status(500).json({mensagem:"Não possível listar os produtos"})
             }
         }
+
+        async listarProduto(request, response){
+            try {
+                const id = request.params.id
+                const produtos = await this.database.query(`select p.*, c.name 
+                from products p
+                inner join categories c on p.category_id
+                where p.id = $1`, [id])
+                if(produtos.rows[0]=== 0){
+                    response.status(404).json({mensagem: "ID não encontrado"})
+                }
+                    response.status(200).json(produtos.rows[0])
+            } catch (error) {
+                console.error('Erro ao listar produto:', error);
+                response.status(500).json({mensagem: "Não foi possível listar o produto"})
+            }
+        }
 }
 
-module.exports = new ProductsController();
+module.exports = new ProductController();
