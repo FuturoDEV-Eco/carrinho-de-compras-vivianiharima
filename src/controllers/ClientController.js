@@ -3,9 +3,11 @@ const Database = require('../database/Database');
 
 
 class ClientController extends Database {
+
     async cadastrar(request, response){
        try {
         const dados = request.body
+        
        
         await this.database.query(`
         Insert into clients(name, email, cpf, contact)

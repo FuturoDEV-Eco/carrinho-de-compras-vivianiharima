@@ -3,11 +3,12 @@ const Database = require("../database/Database");
 class OrderController extends Database {
 
     async cadastrar(request, response) {
+        try {
         const dados = request.body;
 
 
-        if(!dados.products || !dados.amount && dados.amount !== 0){
-            response.status(400).json({mensagem:"Produto e quantidade são dados obrigatórios"})
+        if(!dados.products || !dados.amount && dados.amount !== 0 || !dados.client_id || !dados.address){
+            response.status(400).json({mensagem:"Produto, quantidade e dados do cliente são obrigatórios."})
         }
         
        
@@ -52,7 +53,12 @@ class OrderController extends Database {
       
         response.status(201).json({mensagem: 'criado com sucesso'})
 
+        }catch (error) {
+            console.error('Erro ao listar produto:', error);
+            response.status(500).json({mensagem: "Não foi possível cadastrar pedido"})
+        }
+
     }
 }
 
-module.exports = new OrderController()
+module.exports = new OrderController ();
